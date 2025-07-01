@@ -3,7 +3,7 @@ import { Button } from "./components/ui/button"
 import { Textarea } from "./components/ui/textarea"
 import { Card, CardContent } from "./components/ui/card"
 import { useState } from "react"
-import { ScrollArea, ScrollBar } from "./components/ui/scroll-area"
+import { ScrollArea } from "./components/ui/scroll-area"
 import ReachMarkDown from "react-markdown"
 
 function App() {
