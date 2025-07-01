@@ -1,7 +1,11 @@
+import os
+import openai
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+load_dotenv()
 
 app = FastAPI()
 
@@ -12,9 +16,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 class ChatRequest(BaseModel):
     query: str
 
 @app.post("/chat")
 def chat(request: ChatRequest):
-    return {"response": f"The backend is set up, you asked: {request.query}"} 
+    completion = openai.chat.completions.create(
+        model="gpt-4.1-nano-2025-04-14",
+        messages=[
+            {
+                "role":"user",
+                "content": request.query
+            }
+        ]
+    )
+    message = completion.choices[0].message.content
+    return {"response": message}
