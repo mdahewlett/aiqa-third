@@ -5,18 +5,34 @@ import { Textarea } from "./components/ui/textarea"
 import { useState } from "react"
 
 function App() {
+
   const [query, setQuery] = useState("")
   const [response, setResponse] = useState("")
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!query.trim()) {
       setQuery("")
       setResponse("")
       return
     }
-    
-    setResponse(`You asked: ${query}`)
-    setQuery("")
+
+    try {
+      const res = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({ query })
+      })
+      const data = await res.json()
+      setResponse(data.response)
+    } catch (err) {
+      console.error("API error:", err)
+      setResponse("Something went wrong, please try again")
+    }
+
+    setQuery('')
+
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
