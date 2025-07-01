@@ -3,6 +3,8 @@ import { Button } from "./components/ui/button"
 import { Textarea } from "./components/ui/textarea"
 import { Card, CardContent } from "./components/ui/card"
 import { useState } from "react"
+import { ScrollArea, ScrollBar } from "./components/ui/scroll-area"
+import ReachMarkDown from "react-markdown"
 
 function App() {
 
@@ -49,8 +51,17 @@ function App() {
         <p>Second time's the charm</p>
       </div>
       <div className="flex flex-col justify-center h-full gap-10 w-1/2 mx-auto">
-        {response && <Card>
-          <CardContent className="whitespace-pre-wrap">{response}</CardContent>
+        {response && <Card className="py-0 px-6">
+          <CardContent className="relative whitespace-pre-wrap px-1">
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-2 bg-gradient-to-b from-white dark:from-background to-transparent z-10" />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white dark:from-background to-transparent z-10" />
+
+            <ScrollArea className="max-h-64 overflow-y-auto py-3">
+              <ReachMarkDown>
+                {response}
+              </ReachMarkDown>
+            </ScrollArea>
+          </CardContent>
         </Card>}
         <div className="flex items-center gap-2 border rounded-md px-3 py-2">
           <Textarea
