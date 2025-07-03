@@ -2,14 +2,19 @@ import { Send } from "lucide-react"
 import { Button } from "./components/ui/button"
 import { Textarea } from "./components/ui/textarea"
 import { Card, CardContent } from "./components/ui/card"
-import { useState } from "react"
+import React, { useState } from "react"
 import { ScrollArea } from "./components/ui/scroll-area"
 import ReachMarkDown from "react-markdown"
+import { Input } from "./components/ui/input"
 
 function App() {
 
   const [query, setQuery] = useState("")
   const [response, setResponse] = useState("")
+  const [password, setPassword] = useState("")
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  const systemPassword = import.meta.env.VITE_SITE_PASSWORD
 
   const handleSubmit = async () => {
     if (!query.trim()) {
@@ -43,6 +48,32 @@ function App() {
       e.preventDefault()
       handleSubmit()
     }
+  }
+
+  const handleInputKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (password === systemPassword) {
+      e.preventDefault()
+      setIsAuthenticated(true)
+      } else {
+        alert("Wrong password")
+      }
+    }
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="h-screen flex items-center justify-center w-1/4 mx-auto">
+        <Input 
+          type="password" 
+          id="password"
+          placeholder="Password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={handleInputKeydown}
+          />
+      </div>
+    )
   }
 
   return (
