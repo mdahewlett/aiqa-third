@@ -12,9 +12,7 @@ function App() {
   const [query, setQuery] = useState("")
   const [response, setResponse] = useState("")
   const [password, setPassword] = useState("")
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-
-  const systemPassword = import.meta.env.VITE_SITE_PASSWORD
+  const [confirmedPassword, setConfirmedPassword] = useState(false)
 
   const handleSubmit = async () => {
     if (!query.trim()) {
@@ -24,13 +22,20 @@ function App() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/chat", {
+      const res = await fetch("/chat", {
         method: "POST",
         headers: {
-          "Content-type": "application/json"
+          "Content-type": "application/json",
+          "x-api-key": password
         },
         body: JSON.stringify({ query })
       })
+
+      if (res.status === 401) {
+        setResponse("You entered the incorrect password. Refresh the page and try again.")
+        setQuery('')
+        return
+      }
 
       const data = await res.json()
       setResponse(data.response)
@@ -52,16 +57,12 @@ function App() {
 
   const handleInputKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (password === systemPassword) {
       e.preventDefault()
-      setIsAuthenticated(true)
-      } else {
-        alert("Wrong password")
-      }
+      setConfirmedPassword(true)
     }
   }
 
-  if (!isAuthenticated) {
+  if (!confirmedPassword) {
     return (
       <div className="h-screen flex items-center justify-center w-1/4 mx-auto">
         <Input 
