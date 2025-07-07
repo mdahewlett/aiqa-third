@@ -22,7 +22,7 @@ function App() {
     }
 
     try {
-      const res = await fetch("/chat", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/chat`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
