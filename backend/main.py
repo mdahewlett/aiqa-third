@@ -3,8 +3,6 @@ import openai
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 load_dotenv()
@@ -14,7 +12,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "https://aiqa-third.vercel.app/"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -40,5 +38,3 @@ def chat(request: ChatRequest, x_api_key: str = Header(None)):
     )
     message = completion.choices[0].message.content
     return {"response": message}
-
-app.mount("/", StaticFiles(directory="dist", html=True), name="static")
